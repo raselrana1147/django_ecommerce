@@ -35,7 +35,11 @@
 
 <body>
     <div class="page-wrapper">
+    {% if request.resolver_match.url_name == 'home' %}
        {% include 'include/header.html' %}
+    {% else %}
+       {% include 'include/detail_header.html' %}
+    {% endif %}
         <main class="main">
           {% block slider %}
               

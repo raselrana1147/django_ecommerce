@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 
 
 # Create your models here.
@@ -16,6 +17,11 @@ class Category(models.Model):
         ordering = ["-created_at"]
         verbose_name_plural = "Categories"
 
+    def save(self,*args, **kwargs):
+        if not self.slug:
+            self.slug=slugify(self.name)
+        return super().save(*args,**kwargs)
+
 
 class Product(models.Model):
     name = models.CharField(max_length=191, blank=False, null=False)
@@ -26,6 +32,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="product", blank=False, null=False)
     sale_price = models.FloatField(default=0.00, blank=False, null=False)
     previous_price = models.FloatField(default=0.00, null=True, blank=True)
+    slug=models.SlugFeild(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_stock = models.BooleanField(default=True)
 
