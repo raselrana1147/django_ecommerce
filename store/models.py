@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 
 # Create your models here.
@@ -17,11 +18,6 @@ class Category(models.Model):
         ordering = ["-created_at"]
         verbose_name_plural = "Categories"
 
-    def save(self,*args, **kwargs):
-        if not self.slug:
-            self.slug=slugify(self.name)
-        return super().save(*args,**kwargs)
-
 
 class Product(models.Model):
     name = models.CharField(max_length=191, blank=False, null=False)
@@ -32,7 +28,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="product", blank=False, null=False)
     sale_price = models.FloatField(default=0.00, blank=False, null=False)
     previous_price = models.FloatField(default=0.00, null=True, blank=True)
-    slug=models.SlugFeild(unique=True)
+    slug = models.SlugField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_stock = models.BooleanField(default=True)
 
@@ -41,3 +37,20 @@ class Product(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+    def get_product_url(self):
+        return reverse('store:product_details', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='product_gallery')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.product.name)
