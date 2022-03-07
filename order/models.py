@@ -8,15 +8,17 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
     item = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+    size=models.CharField(max_length=50,blank=True,null=True)
+    color=models.CharField(max_length=50,blank=True,null=True)
     purchased = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.quntity} X {self.item}"
+        return f"{self.quantity} X {self.item}"
 
     def get_total(self):
-        total = self.quntity * self.item.sale_price
+        total = self.quantity * self.item.sale_price
         float_total = format(total, '0.2f')
         return float_total
 
