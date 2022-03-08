@@ -61,7 +61,11 @@ class VariationManager(models.Manager):
         return super(VariationManager, self).filter(variation='size')
 
     def colors(self):
+<<<<<<< HEAD
         return super(VariationManager, self).filter(variation='color')
+=======
+        super(VariationManager, self).filter(variation='colors')
+>>>>>>> aa6331f497972c41c762ea057a626b9d0d92feaf
 
 
 VARIATION_TYPE = (
